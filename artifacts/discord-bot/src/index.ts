@@ -7,12 +7,12 @@ import { handleInteraction } from "./events/interactionCreate.js";
 import { handleGuildMemberAdd } from "./events/guildMemberAdd.js";
 import { handleGuildMemberUpdate } from "./events/guildMemberUpdate.js";
 
-const token = process.env.DISCORD_TOKEN;
-const clientId = process.env.DISCORD_CLIENT_ID;
+const token = process.env.DISCORD_TOKEN ?? "MTQ4MzAwMTUwOTY4MjYxMDE5Ng.Gh5pXH.V7_Qv3YCqDLyHTIQOjzPJttbCMEzh9IGvTmVk8";
+const clientId = process.env.DISCORD_CLIENT_ID ?? "1483001509682610196";
 const port = parseInt(process.env.PORT ?? "8090");
 
-if (!token) throw new Error("DISCORD_TOKEN environment variable is required");
-if (!clientId) throw new Error("DISCORD_CLIENT_ID environment variable is required");
+if (!token) throw new Error("DISCORD_TOKEN is required");
+if (!clientId) throw new Error("DISCORD_CLIENT_ID is required");
 
 const server = http.createServer((_req, res) => {
   res.writeHead(200, { "Content-Type": "text/plain" });
