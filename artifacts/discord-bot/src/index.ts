@@ -48,6 +48,10 @@ async function deployCommandsToGuilds(): Promise<void> {
   const rest = new REST().setToken(token!);
   const body = commands.map((c) => c.data.toJSON());
 
+  // Clear all global commands so there are no duplicates
+  await rest.put(Routes.applicationCommands(clientId!), { body: [] });
+  console.log("[Bot] Cleared global commands");
+
   for (const guild of client.guilds.cache.values()) {
     await rest.put(Routes.applicationGuildCommands(clientId!, guild.id), { body });
     console.log(`[Bot] Registered ${body.length} guild commands to: ${guild.name}`);
