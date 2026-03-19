@@ -1,16 +1,7 @@
 import { GuildMember, TextChannel } from "discord.js";
 
-const WELCOME_CHANNEL_NAME = "👋𝑾𝒆𝒍𝒄𝒐𝒎𝒆";
+const WELCOME_CHANNEL_ID = "1481077822054207568";
 const AUTO_ROLE_NAME = "𝗙𝗰 𝗙𝗿𝗶𝗲𝗻𝗱𝘀 ⋅";
-
-function normalizeChannelName(name: string): string {
-  // Strip emojis, punctuation, and convert to lowercase for flexible matching
-  return name
-    .replace(/\p{Emoji}/gu, "")
-    .replace(/[^\p{L}\p{N}]/gu, "")
-    .toLowerCase()
-    .trim();
-}
 
 export async function handleGuildMemberAdd(member: GuildMember): Promise<void> {
   const { guild, user } = member;
@@ -29,22 +20,12 @@ export async function handleGuildMemberAdd(member: GuildMember): Promise<void> {
   }
 
   try {
-    const targetNormalized = normalizeChannelName(WELCOME_CHANNEL_NAME);
-    const welcomeChannel = guild.channels.cache.find(
-      (c) => c.isTextBased() && normalizeChannelName(c.name).includes(targetNormalized)
-    ) as TextChannel | undefined;
+    const welcomeChannel = guild.channels.cache.get(WELCOME_CHANNEL_ID) as TextChannel | undefined;
 
-    // Fallback: search for any channel whose name contains "welcome"
-    const finalChannel = welcomeChannel ?? (guild.channels.cache.find(
-      (c) => c.isTextBased() && normalizeChannelName(c.name).includes("welcome")
-    ) as TextChannel | undefined);
-
-    if (!finalChannel) {
-      console.warn(`[Welcome] No welcome channel found in guild. Tried: "${WELCOME_CHANNEL_NAME}". Channels: ${guild.channels.cache.filter(c => c.isTextBased()).map(c => c.name).join(", ")}`);
+    if (!welcomeChannel) {
+      console.warn(`[Welcome] Channel with ID ${WELCOME_CHANNEL_ID} not found.`);
       return;
     }
-
-    const welcomeChannelFinal = finalChannel;
 
     const memberCount = guild.memberCount;
 
@@ -58,7 +39,8 @@ export async function handleGuildMemberAdd(member: GuildMember): Promise<void> {
       `𝗘𝗻𝗷𝗼𝘆 𝘂𝘀𝗶𝗻𝗴 𝘁𝗵𝗲 𝘀𝗲𝗿𝘃𝗲𝗿 <a:hanyaCheer:1481209797545168978>`,
     ].join("\n");
 
-    await welcomeChannelFinal.send(message);
+    await welcomeChannel.send(message);
+    console.log(`[Welcome] Sent welcome message for ${user.tag} in #${welcomeChannel.name}`);
   } catch (err) {
     console.error("[Welcome] Error sending welcome message:", err);
   }
