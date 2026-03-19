@@ -12,6 +12,7 @@ import { ticketCommand } from "./ticket.js";
 import { lockCommand } from "./lock.js";
 import { unlockCommand } from "./unlock.js";
 import { roleCommand } from "./role.js";
+import { sendmessageCommand } from "./sendmessage.js";
 import type { Command } from "../types.js";
 
 export const commands: Command[] = [
@@ -29,4 +30,5 @@ export const commands: Command[] = [
   lockCommand,
   unlockCommand,
   roleCommand,
+  sendmessageCommand,
 ];
